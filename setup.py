@@ -26,7 +26,7 @@ def fix_path(path: str) -> str:
     return os.path.realpath(path).replace(os.sep, "/")
 
 
-dependencies = requirements.get_fixed_runtime_dependencies()
+dependencies = requirements.get_runtime_dependencies()
 
 cmdclass: dict[str, type[Command]] = versioneer.get_cmdclass()
 
