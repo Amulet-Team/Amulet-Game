@@ -12,7 +12,7 @@ AMULET_IO_REQUIREMENT = "~=1.0"
 # AMULET_NBT_REQUIREMENT = "~=4.0"
 AMULET_NBT_REQUIREMENT = "~=4.0.1.0a0"
 # AMULET_CORE_REQUIREMENT = "~=2.0"
-AMULET_CORE_REQUIREMENT = "==2.0.1.0a1"
+AMULET_CORE_REQUIREMENT = "~=2.0.1.0a3"
 
 
 def get_specifier_set(version_str: str) -> str:
