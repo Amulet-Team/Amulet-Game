@@ -13,7 +13,6 @@ from packaging.version import Version
 import versioneer
 
 import requirements
-import amulet_compiler_version
 
 if (
     os.environ.get("AMULET_FREEZE_COMPILER", None)
