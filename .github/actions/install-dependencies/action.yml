@@ -1,0 +1,96 @@
+name: 'Install dependencies'
+description: 'Build if needed and install the library dependencies'
+inputs:
+  username:
+    description: 'The pypi username'
+  compiler-version-password:
+    description: 'The password for the compiler-version library'
+  nbt-password:
+    description: 'The password for the nbt library'
+  core-password:
+    description: 'The password for the core library'
+  rest-token:
+    description: 'The Github authentication token to use to access the REST API.'
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip cache purge
+        python -m pip install --upgrade pip
+        pip install build twine packaging
+
+    - name: Clone Amulet-Compiler-Version
+      uses: actions/checkout@v4
+      with:
+        repository: 'Amulet-Team/Amulet-Compiler-Version'
+        ref: '3.0'
+        path: 'build/pylib/Amulet-Compiler-Version'
+
+    - name: Install Amulet-Compiler-Version
+      id: compiler
+      uses: ./build/pylib/Amulet-Compiler-Version/.github/actions/install
+      with:
+        twine-username: ${{ inputs.username }}
+        twine-password: ${{ inputs.compiler-version-password }}
+
+    - name: Get Dependencies
+      id: dep
+      shell: bash
+      run: |
+        core=$(python -c "import requirements; print(requirements.AMULET_CORE_REQUIREMENT)")
+        echo "core=$core" >> "$GITHUB_OUTPUT"
+        nbt=$(python -c "import requirements; print(requirements.AMULET_NBT_REQUIREMENT)")
+        echo "nbt=$nbt" >> "$GITHUB_OUTPUT"
+
+    - name: Clone Amulet-Core
+      id: core-clone
+      uses: Amulet-Team/checkout-pep440@v1
+      with:
+        repository: 'Amulet-Team/Amulet-Core'
+        specifier: ${{ steps.dep.outputs.core }}
+        path: 'build/pylib/Amulet-Core'
+        rest-token: ${{ inputs.rest-token }}
+
+    - name: Merge Dependencies
+      id: dep2
+      shell: bash
+      run: |
+        nbt=$(python -c "import sys, os; sys.path.insert(0, os.path.join(r'${{ github.workspace }}', 'build', 'pylib', 'Amulet-Core')); import requirements; print('${{ steps.dep.outputs.nbt }},' + requirements.AMULET_NBT_REQUIREMENT)")
+        echo "nbt=$nbt" >> "$GITHUB_OUTPUT"
+
+    - name: Clone Amulet-NBT
+      id: nbt-clone
+      uses: Amulet-Team/checkout-pep440@v1
+      with:
+        repository: 'Amulet-Team/Amulet-NBT'
+        specifier: ${{ steps.dep2.outputs.nbt }}
+        path: 'build/pylib/Amulet-NBT'
+        rest-token: ${{ inputs.rest-token }}
+
+    - name: Specialise Specifiers
+      id: compiled-dep
+      shell: bash
+      run: |
+        core=$(python -c "import requirements; print(requirements.get_specifier_set(\"${{ steps.core-clone.outputs.ref }}\"))")
+        echo "core=$core" >> "$GITHUB_OUTPUT"
+        nbt=$(python -c "import requirements; print(requirements.get_specifier_set(\"${{ steps.nbt-clone.outputs.ref }}\"))")
+        echo "nbt=$nbt" >> "$GITHUB_OUTPUT"
+
+    - name: Install Amulet-NBT
+      uses: ./build/pylib/Amulet-NBT/.github/actions/install
+      with:
+        twine-username: ${{ inputs.username }}
+        twine-password: ${{ inputs.nbt-password }}
+        compiler-specifier: '==${{ steps.compiler.outputs.version }}'
+        nbt-specifier: ${{ steps.compiled-dep.outputs.nbt }}
+
+    - name: Install Amulet-Core
+      uses: ./build/pylib/Amulet-Core/.github/actions/install
+      with:
+        twine-username: ${{ inputs.username }}
+        twine-password: ${{ inputs.core-password }}
+        compiler-specifier: '==${{ steps.compiler.outputs.version }}'
+        nbt-specifier: ${{ steps.compiled-dep.outputs.nbt }}
+        core-specifier: ${{ steps.compiled-dep.outputs.core }}
