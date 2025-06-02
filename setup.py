@@ -2,90 +2,31 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-import requirements
+import platform
+import datetime
 
 from setuptools import setup, Extension, Command
 from setuptools.command.build_ext import build_ext
+
 from packaging.version import Version
 
 import versioneer
+
+import requirements
+
+if (
+    os.environ.get("AMULET_FREEZE_COMPILER", None)
+    and sys.platform == "darwin"
+    and platform.machine() != "arm64"
+):
+    raise Exception("The MacOS frozen build must be created on arm64")
 
 
 def fix_path(path: str) -> str:
     return os.path.realpath(path).replace(os.sep, "/")
 
 
-dependencies = requirements.get_fixed_runtime_dependencies()
-setup_args = {}
-
-
-def add_dependency(lib_name: str, version_str: str) -> None:
-    version = Version(version_str)
-    if version.is_prerelease:
-        # Breaking API changes can be made between pre-release versions. Pin to this exact release.
-        dependencies.append(f"{lib_name}=={version_str}")
-    else:
-        # Major - breaking API change. Dependents must be updated and recompiled.
-        major = version.major
-        # Minor - backwards compatible API change. Dependents must be recompiled.
-        minor = version.minor
-        # Patch - API unchanged. Dependents must be recompiled.
-        patch = version.micro
-        # Fix - API unchanged. Dependents do not need to be recompiled.
-        dependencies.append(f"{lib_name}~={major}.{minor}.{patch}.0")
-
-
-try:
-    import amulet_compiler_version
-except ImportError:
-    dependencies.append(
-        f"amulet-compiler-version{requirements.AMULET_COMPILER_VERSION_REQUIREMENT}"
-    )
-else:
-    if os.environ.get("AMULET_FREEZE_COMPILER", None):
-        dependencies.append(
-            f"amulet-compiler-version=={amulet_compiler_version.__version__}"
-        )
-        setup_args["options"] = {
-            "bdist_wheel": {
-                "build_number": f"1.{amulet_compiler_version.compiler_id}.{amulet_compiler_version.compiler_version}"
-            }
-        }
-    else:
-        dependencies.append(
-            f"amulet-compiler-version{requirements.AMULET_COMPILER_VERSION_REQUIREMENT}"
-        )
-
-try:
-    import amulet.pybind11_extensions
-except ImportError:
-    dependencies.append(
-        f"amulet_pybind11_extensions{requirements.AMULET_PYBIND11_EXTENSIONS_REQUIREMENT}"
-    )
-else:
-    add_dependency("amulet_pybind11_extensions", amulet.pybind11_extensions.__version__)
-
-try:
-    import amulet.io
-except ImportError:
-    dependencies.append(f"amulet_io{requirements.AMULET_IO_REQUIREMENT}")
-else:
-    add_dependency("amulet_io", amulet.io.__version__)
-
-try:
-    import amulet.nbt
-except ImportError:
-    dependencies.append(f"amulet_nbt{requirements.AMULET_NBT_REQUIREMENT}")
-else:
-    add_dependency("amulet_nbt", amulet.nbt.__version__)
-
-try:
-    import amulet.core
-except ImportError:
-    dependencies.append(f"amulet_core{requirements.AMULET_CORE_REQUIREMENT}")
-else:
-    add_dependency("amulet_core", amulet.core.__version__)
-
+dependencies = requirements.get_runtime_dependencies()
 
 cmdclass: dict[str, type[Command]] = versioneer.get_cmdclass()
 
@@ -115,6 +56,9 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
             else:
                 platform_args.extend(["-A", "Win32"])
             platform_args.extend(["-T", "v143"])
+        elif sys.platform == "darwin":
+            if platform.machine() == "arm64":
+                platform_args.append("-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64")
 
         if subprocess.run(
             [
@@ -147,10 +91,38 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
 cmdclass["build_ext"] = CMakeBuild
 
 
+def _get_version() -> str:
+    version_str: str = versioneer.get_version()
+
+    if os.environ.get("AMULET_FREEZE_COMPILER", None):
+        date_format = "%y%m%d%H%M%S"
+        try:
+            with open("build/timestamp.txt", "r") as f:
+                timestamp = datetime.datetime.strptime(f.read(), date_format)
+            print("using cached timestamp")
+        except Exception:
+            timestamp = datetime.datetime(1, 1, 1)
+        if datetime.timedelta(minutes=10) < datetime.datetime.now() - timestamp:
+            print("get timestamp")
+            timestamp = datetime.datetime.now()
+            os.makedirs("build", exist_ok=True)
+            with open("build/timestamp.txt", "w") as f:
+                f.write(timestamp.strftime(date_format))
+
+        version = Version(version_str)
+        epoch = f"{version.epoch}!" if version.epoch else ""
+        release = ".".join(map(str, version.release))
+        pre = "".join(map(str, version.pre)) if version.is_prerelease else ""
+        post = f".post{timestamp.strftime(date_format)}"
+        local = f"+{version.local}" if version.local else ""
+        version_str = f"{epoch}{release}{pre}{post}{local}"
+
+    return version_str
+
+
 setup(
-    version=versioneer.get_version(),
+    version=_get_version(),
     cmdclass=cmdclass,
     ext_modules=[Extension("amulet.game._amulet_game", [])],
     install_requires=dependencies,
-    **setup_args,
 )
