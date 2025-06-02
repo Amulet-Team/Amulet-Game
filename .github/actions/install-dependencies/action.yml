@@ -128,5 +128,5 @@ runs:
         twine-password: ${{ inputs.core-password }}
         compiler-specifier: '==${{ steps.compiler.outputs.version }}'
         io-specifier: ${{ steps.dep2.outputs.io }}
-        nbt-specifier: ${{ steps.compiled-dep.outputs.nbt }}
-        core-specifier: ${{ steps.compiled-dep.outputs.core }}
+        nbt-specifier: ${{ steps.dep2.outputs.nbt }}
+        core-specifier: ${{ steps.dep2.outputs.core }}
