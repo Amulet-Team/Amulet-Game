@@ -15,6 +15,22 @@ AMULET_NBT_REQUIREMENT = "~=5.0.0.0a0"
 AMULET_CORE_REQUIREMENT = "~=2.0.2.0a0"
 
 
+if os.environ.get("AMULET_IO_REQUIREMENT", None):
+    AMULET_IO_REQUIREMENT = (
+        f"{AMULET_IO_REQUIREMENT},{os.environ['AMULET_IO_REQUIREMENT']}"
+    )
+
+if os.environ.get("AMULET_NBT_REQUIREMENT", None):
+    AMULET_NBT_REQUIREMENT = (
+        f"{AMULET_NBT_REQUIREMENT},{os.environ['AMULET_NBT_REQUIREMENT']}"
+    )
+
+if os.environ.get("AMULET_CORE_REQUIREMENT", None):
+    AMULET_CORE_REQUIREMENT = (
+        f"{AMULET_CORE_REQUIREMENT},{os.environ['AMULET_CORE_REQUIREMENT']}"
+    )
+
+
 def get_specifier_set(version_str: str) -> str:
     """
     version_str: The PEP 440 version number of the library.
