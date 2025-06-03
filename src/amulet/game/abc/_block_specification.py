@@ -7,22 +7,22 @@ import json
 import glob
 from concurrent.futures import ThreadPoolExecutor
 
-from amulet_nbt import read_snbt
-from amulet.block import PropertyValueType
+from amulet.nbt import read_snbt
+from amulet.core.block import Block
 
 from .json_interface import JSONInterface, JSONDict, JSONCompatible
 
 
-def immutable_from_snbt(snbt: str) -> PropertyValueType:
+def immutable_from_snbt(snbt: str) -> Block.PropertyValue:
     val = read_snbt(snbt)
-    assert isinstance(val, PropertyValueType)
+    assert isinstance(val, Block.PropertyValue)
     return val
 
 
 @dataclass(frozen=True)
 class PropertyValueSpec:
-    default: PropertyValueType
-    states: tuple[PropertyValueType, ...]
+    default: Block.PropertyValue
+    states: tuple[Block.PropertyValue, ...]
 
 
 class PropertySpec(Mapping[str, PropertyValueSpec], Hashable):
@@ -77,7 +77,7 @@ class BlockSpec(JSONInterface):
             assert isinstance(default_str, str)
             default_nbt = immutable_from_snbt(default_str)
 
-            states: list[PropertyValueType] = []
+            states: list[Block.PropertyValue] = []
             for val_str in values:
                 assert isinstance(val_str, str)
                 val_nbt = immutable_from_snbt(val_str)

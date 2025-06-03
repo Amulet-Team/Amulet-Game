@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 if TYPE_CHECKING:
     from .block import BlockData

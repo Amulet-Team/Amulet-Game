@@ -1,6 +1,6 @@
 from collections.abc import Mapping, Collection
 
-from amulet.biome import Biome
+from amulet.core.biome import Biome
 from amulet.game.abc import DatabaseBiomeData, BiomeDataNumericalComponent
 from amulet.game.abc import GameVersion
 

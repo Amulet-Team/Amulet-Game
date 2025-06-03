@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Self, Any
 from collections.abc import Mapping
 
-from amulet.block import PropertyValueType
+from amulet.core.block import Block
 from .abc import (
     AbstractBaseTranslationFunction,
     immutable_from_snbt,
@@ -20,15 +20,15 @@ class NewProperties(AbstractBaseTranslationFunction):
     _instances = {}
 
     # Instance variables
-    _properties: FrozenMapping[str, PropertyValueType]
+    _properties: FrozenMapping[str, Block.PropertyValue]
 
-    def __init__(self, properties: Mapping[str, PropertyValueType]) -> None:
+    def __init__(self, properties: Mapping[str, Block.PropertyValue]) -> None:
         super().__init__()
-        self._properties = FrozenMapping[str, PropertyValueType](properties)
+        self._properties = FrozenMapping[str, Block.PropertyValue](properties)
         if not all(isinstance(key, str) for key in self._properties.keys()):
             raise TypeError
         if not all(
-            isinstance(value, PropertyValueType) for value in self._properties.values()
+            isinstance(value, Block.PropertyValue) for value in self._properties.values()
         ):
             raise TypeError
 

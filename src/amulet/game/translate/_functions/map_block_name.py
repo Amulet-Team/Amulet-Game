@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Self, Any
 from collections.abc import Mapping
 
-from amulet.block import Block
+from amulet.core.block import Block
 from .abc import (
     AbstractBaseTranslationFunction,
     translation_function_from_json,

@@ -6,7 +6,7 @@ from typing import (
     Any,
 )
 
-from amulet_nbt import (
+from amulet.nbt import (
     ListTag,
     CompoundTag,
     read_snbt,

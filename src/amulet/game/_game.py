@@ -11,12 +11,12 @@ import glob
 import json
 import gzip
 
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 
 if TYPE_CHECKING:
     from .abc import GameVersion
-    from ._universal import UniversalVersion
+    from .universal import UniversalVersion
     from .java import JavaGameVersion
     from .bedrock import BedrockGameVersion
 
@@ -33,7 +33,7 @@ def _compile_raw_versions() -> None:
             raise RuntimeError("Could not find game version data.")
         from .java import JavaGameVersion
         from .bedrock import BedrockGameVersion
-        from ._universal import UniversalVersion
+        from .universal import UniversalVersion
 
         _versions = {}
         _versions.setdefault("universal", []).append(

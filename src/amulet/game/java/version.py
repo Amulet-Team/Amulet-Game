@@ -3,7 +3,7 @@ from typing import Self
 import os
 import json
 
-from amulet.biome import Biome
+from amulet.core.biome import Biome
 from amulet.game import get_game_version
 from amulet.game.abc import GameVersion, load_json_block_spec, load_json_biome_data
 from amulet.game.translate import (
@@ -11,10 +11,10 @@ from amulet.game.translate import (
     BlockFromUniversalTranslator,
     load_json_block_translations,
 )
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
-from ._block import JavaBlockData, Waterloggable
-from ._biome import JavaBiomeData
+from .block import JavaBlockData, Waterloggable
+from .biome import JavaBiomeData
 
 
 class JavaGameVersion(GameVersion):

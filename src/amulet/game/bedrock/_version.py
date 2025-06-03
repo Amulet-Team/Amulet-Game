@@ -3,7 +3,7 @@ from typing import Self
 import json
 import os
 
-from amulet.biome import Biome
+from amulet.core.biome import Biome
 from amulet.game import get_game_version
 from amulet.game.abc import GameVersion, load_json_block_spec, load_json_biome_data
 from amulet.game.translate import (
@@ -11,7 +11,7 @@ from amulet.game.translate import (
     BlockFromUniversalTranslator,
     load_json_block_translations,
 )
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 from ._block import BedrockBlockData
 from ._biome import BedrockBiomeData

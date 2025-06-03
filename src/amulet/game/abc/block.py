@@ -5,11 +5,10 @@ from typing import Callable, TYPE_CHECKING, TypeVar
 from collections.abc import Mapping, Collection
 from copy import deepcopy
 
-from amulet.block import Block
-from amulet.block_entity import BlockEntity
-from amulet.entity import Entity
-from amulet.data_types import BlockCoordinates
-from amulet.version import VersionNumber
+from amulet.core.block import Block
+from amulet.core.block_entity import BlockEntity
+from amulet.core.entity import Entity
+from amulet.core.version import VersionNumber
 from amulet.game import get_game_version
 
 from ._block_specification import BlockSpec
@@ -66,8 +65,8 @@ class BlockData(GameVersionContainer, ABC):
         block_entity: BlockEntity | None = None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ) = None,
@@ -119,8 +118,8 @@ class BlockData(GameVersionContainer, ABC):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -153,8 +152,8 @@ class BlockData(GameVersionContainer, ABC):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -225,8 +224,8 @@ class DatabaseBlockData(BlockData, ABC):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -265,8 +264,8 @@ class DatabaseBlockData(BlockData, ABC):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),

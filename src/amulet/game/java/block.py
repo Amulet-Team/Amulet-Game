@@ -12,10 +12,10 @@ from amulet.game.translate import (
     BlockFromUniversalTranslator,
 )
 
-from amulet.game.java.block import Waterloggable
+from ._block import Waterloggable
 
 if TYPE_CHECKING:
-    from ._version import JavaGameVersion
+    from .version import JavaGameVersion
 
 
 class JavaBlockData(DatabaseBlockData, BlockDataNumericalComponent):

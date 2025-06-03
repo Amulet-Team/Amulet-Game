@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Self, Any
 
-from amulet_nbt import CompoundTag, ListTag, AbstractBaseNumericTag
+from amulet.nbt import CompoundTag, ListTag, AbstractBaseNumericTag
 
 from .abc import (
     AbstractBaseTranslationFunction,

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Self, Any
 from collections.abc import Mapping, Iterable
 
-from amulet.block import PropertyValueType, Block
+from amulet.core.block import Block
 
 from .abc import (
     AbstractBaseTranslationFunction,
@@ -21,9 +21,9 @@ class CarryProperties(AbstractBaseTranslationFunction):
     _instances = {}
 
     # Instance variables
-    _properties: FrozenMapping[str, OrderedFrozenSet[PropertyValueType]]
+    _properties: FrozenMapping[str, OrderedFrozenSet[Block.PropertyValue]]
 
-    def __init__(self, properties: Mapping[str, Iterable[PropertyValueType]]) -> None:
+    def __init__(self, properties: Mapping[str, Iterable[Block.PropertyValue]]) -> None:
         super().__init__()
         assert isinstance(properties, Mapping)
         frozen_properties = {}
@@ -31,11 +31,11 @@ class CarryProperties(AbstractBaseTranslationFunction):
             frozen_val = OrderedFrozenSet(val)
             if not (
                 isinstance(key, str)
-                and all(isinstance(v, PropertyValueType) for v in frozen_val)
+                and all(isinstance(v, Block.PropertyValue) for v in frozen_val)
             ):
                 raise TypeError
             frozen_properties[key] = frozen_val
-        self._properties = FrozenMapping[str, OrderedFrozenSet[PropertyValueType]](
+        self._properties = FrozenMapping[str, OrderedFrozenSet[Block.PropertyValue]](
             frozen_properties
         )
 

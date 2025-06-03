@@ -1,4 +1,4 @@
-from amulet_nbt import CompoundTag, FloatTag, StringTag
+from amulet.nbt import CompoundTag, FloatTag, StringTag
 from .._state import SrcData, StateData, DstData
 
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Union, Type, TypeAlias
 from collections.abc import Iterable
 
-from amulet_nbt import (
+from amulet.nbt import (
     ByteTag,
     ShortTag,
     IntTag,

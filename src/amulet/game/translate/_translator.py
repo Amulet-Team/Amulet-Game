@@ -5,7 +5,7 @@ import glob
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from amulet_nbt import (
+from amulet.nbt import (
     read_nbt,
     read_snbt,
     NamedTag,
@@ -14,11 +14,10 @@ from amulet_nbt import (
     AnyNBT,
 )
 
-from amulet.block import Block
-from amulet.block_entity import BlockEntity
-from amulet.entity import Entity
-from amulet.data_types import BlockCoordinates
-from amulet.version import VersionNumber
+from amulet.core.block import Block
+from amulet.core.block_entity import BlockEntity
+from amulet.core.entity import Entity
+from amulet.core.version import VersionNumber
 
 from ._functions import (
     AbstractBaseTranslationFunction,
@@ -164,8 +163,8 @@ class BlockToUniversalTranslator:
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -268,8 +267,8 @@ class BlockFromUniversalTranslator:
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -409,8 +408,8 @@ class EntityToUniversalTranslator:
         entity: Entity,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -424,8 +423,8 @@ class EntityFromUniversalTranslator:
         entity: Entity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),

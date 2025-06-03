@@ -1,12 +1,11 @@
 from typing import Callable
 
-from amulet.data_types import BlockCoordinates
-from amulet.block import Block
-from amulet.block_entity import BlockEntity
-from amulet.entity import Entity
+from amulet.core.block import Block
+from amulet.core.block_entity import BlockEntity
+from amulet.core.entity import Entity
 
 from amulet.game.abc import BlockData
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 
 class UniversalBlockData(BlockData):
@@ -16,8 +15,8 @@ class UniversalBlockData(BlockData):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),
@@ -35,8 +34,8 @@ class UniversalBlockData(BlockData):
         block_entity: BlockEntity | None,
         extra: (
             tuple[
-                BlockCoordinates,
-                Callable[[BlockCoordinates], tuple[Block, BlockEntity | None]],
+                tuple[int, int, int],
+                Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]],
             ]
             | None
         ),

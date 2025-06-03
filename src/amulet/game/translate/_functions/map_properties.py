@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Self, Any
 from collections.abc import Mapping
 
-from amulet.block import PropertyValueType, Block
+from amulet.core.block import Block
 from .abc import (
     AbstractBaseTranslationFunction,
     immutable_from_snbt,
@@ -22,13 +22,13 @@ class MapProperties(AbstractBaseTranslationFunction):
 
     # Instance variables
     _properties: FrozenMapping[
-        str, FrozenMapping[PropertyValueType, AbstractBaseTranslationFunction]
+        str, FrozenMapping[Block.PropertyValue, AbstractBaseTranslationFunction]
     ]
 
     def __init__(
         self,
         properties: Mapping[
-            str, Mapping[PropertyValueType, AbstractBaseTranslationFunction]
+            str, Mapping[Block.PropertyValue, AbstractBaseTranslationFunction]
         ],
     ) -> None:
         super().__init__()
@@ -37,15 +37,15 @@ class MapProperties(AbstractBaseTranslationFunction):
         for prop, data in properties.items():
             assert isinstance(prop, str)
             hashable_data = FrozenMapping[
-                PropertyValueType, AbstractBaseTranslationFunction
+                Block.PropertyValue, AbstractBaseTranslationFunction
             ](data)
             for val, func in hashable_data.items():
-                assert isinstance(val, PropertyValueType)
+                assert isinstance(val, Block.PropertyValue)
                 assert isinstance(func, AbstractBaseTranslationFunction)
             hashable_properties[prop] = hashable_data
 
         self._properties = FrozenMapping[
-            str, FrozenMapping[PropertyValueType, AbstractBaseTranslationFunction]
+            str, FrozenMapping[Block.PropertyValue, AbstractBaseTranslationFunction]
         ](hashable_properties)
 
     def __reduce__(self) -> Any:

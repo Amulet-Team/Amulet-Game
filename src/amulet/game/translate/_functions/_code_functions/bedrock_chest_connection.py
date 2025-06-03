@@ -1,5 +1,5 @@
 from typing import Callable, Any
-from amulet_nbt import CompoundTag, IntTag, ByteTag, StringTag, AbstractBaseTag
+from amulet.nbt import CompoundTag, IntTag, ByteTag, StringTag, AbstractBaseTag
 from .._state import SrcData, StateData, DstData
 
 

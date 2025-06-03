@@ -1,6 +1,6 @@
-from amulet.biome import Biome
+from amulet.core.biome import Biome
 from amulet.game.abc import BiomeData
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 
 class UniversalBiomeData(BiomeData):

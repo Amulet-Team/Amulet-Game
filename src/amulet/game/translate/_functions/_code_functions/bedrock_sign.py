@@ -2,7 +2,7 @@ import json
 from typing import Any
 from uuid import uuid4
 
-from amulet_nbt import StringTag, CompoundTag, ListTag
+from amulet.nbt import StringTag, CompoundTag, ListTag
 from ._text import RawTextComponent, ExtendedBedrockSectionParser
 from .._state import SrcData, StateData, DstData
 

@@ -6,7 +6,7 @@ namespace py = pybind11;
 
 void init_java_block(py::module m_parent)
 {
-    auto m = m_parent.def_submodule("block");
+    auto m = m_parent.def_submodule("_block");
     std::string module_name = m.attr("__name__").cast<std::string>();
 
     py::enum_<Amulet::game::Waterloggable> Waterloggable(m, "Waterloggable");

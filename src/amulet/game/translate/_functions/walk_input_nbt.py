@@ -4,7 +4,7 @@ from typing import Self, TypeVar, cast, Any
 from collections.abc import Mapping, Sequence, Iterable
 import logging
 
-from amulet_nbt import (
+from amulet.nbt import (
     AbstractBaseArrayTag,
     ByteTag,
     ShortTag,

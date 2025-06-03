@@ -2,7 +2,7 @@ from uuid import uuid4
 import json
 from typing import Callable
 
-from amulet_nbt import CompoundTag, StringTag
+from amulet.nbt import CompoundTag, StringTag
 
 from .._state import SrcData, StateData, DstData
 from ._text import (

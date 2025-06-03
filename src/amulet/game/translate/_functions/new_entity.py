@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Self, Any
 
-from amulet.entity import Entity
+from amulet.core.entity import Entity
 from .abc import AbstractBaseTranslationFunction, Data
 from amulet.game.abc import JSONCompatible, JSONDict
 from ._state import SrcData, StateData, DstData

@@ -4,7 +4,7 @@ import os
 import json
 
 from amulet.game.abc import GameVersion, load_json_block_spec, load_json_biome_data
-from amulet.version import VersionNumber
+from amulet.core.version import VersionNumber
 
 from ._block import UniversalBlockData
 from ._biome import UniversalBiomeData

@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import Sequence, Self, Any
 
-from amulet.data_types import BlockCoordinates
-from amulet.errors import ChunkLoadError
+from amulet.core.chunk import ChunkLoadError
 from .abc import (
     AbstractBaseTranslationFunction,
     Data,
@@ -18,14 +17,14 @@ class MultiBlock(AbstractBaseTranslationFunction):
     Name = "multiblock"
     _instances = {}
 
-    _blocks: tuple[tuple[BlockCoordinates, AbstractBaseTranslationFunction], ...]
+    _blocks: tuple[tuple[tuple[int, int, int], AbstractBaseTranslationFunction], ...]
 
     def __init__(
-        self, blocks: Sequence[tuple[BlockCoordinates, AbstractBaseTranslationFunction]]
+        self, blocks: Sequence[tuple[tuple[int, int, int], AbstractBaseTranslationFunction]]
     ) -> None:
         super().__init__()
         self._blocks = tuple[
-            tuple[BlockCoordinates, AbstractBaseTranslationFunction], ...
+            tuple[tuple[int, int, int], AbstractBaseTranslationFunction], ...
         ](blocks)
         for coords, func in self._blocks:
             if (
@@ -48,7 +47,7 @@ class MultiBlock(AbstractBaseTranslationFunction):
         assert data.get("function") == "multiblock"
         options = data["options"]
         assert isinstance(options, list)
-        blocks: list[tuple[BlockCoordinates, AbstractBaseTranslationFunction]] = []
+        blocks: list[tuple[tuple[int, int, int], AbstractBaseTranslationFunction]] = []
         for block in options:
             assert isinstance(block, dict)
             raw_coords = block["coords"]
