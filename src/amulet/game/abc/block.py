@@ -9,7 +9,7 @@ from amulet.core.block import Block
 from amulet.core.block_entity import BlockEntity
 from amulet.core.entity import Entity
 from amulet.core.version import VersionNumber
-from amulet.game import get_game_version
+from amulet.game.game import get_game_version
 
 from ._block_specification import BlockSpec
 from .game_version_container import GameVersionContainer

@@ -39,6 +39,6 @@ def _init() -> None:
 
 _init()
 
-from ._game import game_platforms, game_versions, get_game_version
+from .game import game_platforms, game_versions, get_game_version
 from .java import JavaGameVersion
 from .bedrock import BedrockGameVersion

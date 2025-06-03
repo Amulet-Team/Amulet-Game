@@ -8,7 +8,7 @@ import json
 
 from amulet.core.biome import Biome
 from amulet.core.version import VersionNumber
-from amulet.game import get_game_version
+from amulet.game.game import get_game_version
 
 from .game_version_container import GameVersionContainer
 
