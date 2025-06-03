@@ -1,5 +1,8 @@
 from __future__ import annotations
 
-from . import block
+from amulet.game.java._block import Waterloggable
+from amulet.game.java.version import JavaGameVersion
 
-__all__ = ["block"]
+from . import _block, biome, block, version
+
+__all__ = ["JavaGameVersion", "Waterloggable", "biome", "block", "version"]

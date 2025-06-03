@@ -17,16 +17,16 @@ class Waterloggable:
 
     Always: typing.ClassVar[
         Waterloggable
-    ]  # value = amulet.game.java.block.Waterloggable.Always
+    ]  # value = amulet.game.java._block.Waterloggable.Always
     No: typing.ClassVar[
         Waterloggable
-    ]  # value = amulet.game.java.block.Waterloggable.No
+    ]  # value = amulet.game.java._block.Waterloggable.No
     Yes: typing.ClassVar[
         Waterloggable
-    ]  # value = amulet.game.java.block.Waterloggable.Yes
+    ]  # value = amulet.game.java._block.Waterloggable.Yes
     __members__: typing.ClassVar[
         dict[str, Waterloggable]
-    ]  # value = {'No': amulet.game.java.block.Waterloggable.No, 'Yes': amulet.game.java.block.Waterloggable.Yes, 'Always': amulet.game.java.block.Waterloggable.Always}
+    ]  # value = {'No': amulet.game.java._block.Waterloggable.No, 'Yes': amulet.game.java._block.Waterloggable.Yes, 'Always': amulet.game.java._block.Waterloggable.Always}
     def __eq__(self, other: typing.Any) -> bool: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
