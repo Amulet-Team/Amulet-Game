@@ -18,7 +18,9 @@ from ._typing import NBTTagT, NBTPath
 @dataclass(frozen=True)
 class SrcDataExtra:
     absolute_coordinates: tuple[int, int, int]
-    get_block_callback: Callable[[tuple[int, int, int]], tuple[Block, BlockEntity | None]]
+    get_block_callback: Callable[
+        [tuple[int, int, int]], tuple[Block, BlockEntity | None]
+    ]
 
 
 @dataclass(frozen=True)

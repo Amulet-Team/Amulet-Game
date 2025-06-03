@@ -20,7 +20,8 @@ class MultiBlock(AbstractBaseTranslationFunction):
     _blocks: tuple[tuple[tuple[int, int, int], AbstractBaseTranslationFunction], ...]
 
     def __init__(
-        self, blocks: Sequence[tuple[tuple[int, int, int], AbstractBaseTranslationFunction]]
+        self,
+        blocks: Sequence[tuple[tuple[int, int, int], AbstractBaseTranslationFunction]],
     ) -> None:
         super().__init__()
         self._blocks = tuple[
