@@ -95,6 +95,7 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
 
 class MinifyJSON(Command):
     def initialize_options(self):
+        self.editable_mode = False
         self.build_lib = None
 
     def finalize_options(self):
@@ -102,7 +103,13 @@ class MinifyJSON(Command):
 
     def run(self):
         # This is rather janky but it is a stop-gap until the whole library can be ported to C++
-        sys.path.append(self.build_lib)
+        if self.editable_mode:
+            src_dir = os.path.abspath("src")
+        else:
+            src_dir = self.build_lib
+
+        sys.path.append(src_dir)
+
         from amulet.game.abc import GameVersion
         from amulet.game.java import JavaGameVersion
         from amulet.game.bedrock import BedrockGameVersion
@@ -138,7 +145,7 @@ class MinifyJSON(Command):
             else:
                 raise RuntimeError
         with open(
-            os.path.join(self.build_lib, "amulet", "game", "versions.pkl.gz"), "wb"
+            os.path.join(src_dir, "amulet", "game", "versions.pkl.gz"), "wb"
         ) as pkl:
             pkl.write(gzip.compress(pickle.dumps(_versions)))
 

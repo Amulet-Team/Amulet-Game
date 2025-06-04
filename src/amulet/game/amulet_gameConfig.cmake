@@ -1,8 +1,6 @@
 if (NOT TARGET amulet_game)
     message(STATUS "Finding amulet_game")
 
-    find_package(amulet_io CONFIG REQUIRED)
-    find_package(amulet_nbt CONFIG REQUIRED)
     find_package(amulet_core CONFIG REQUIRED)
 
     set(amulet_game_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
@@ -12,8 +10,6 @@ if (NOT TARGET amulet_game)
     add_library(amulet_game SHARED IMPORTED)
     set_target_properties(amulet_game PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${amulet_game_INCLUDE_DIR}"
-        INTERFACE_LINK_LIBRARIES amulet_io
-        INTERFACE_LINK_LIBRARIES amulet_nbt
         INTERFACE_LINK_LIBRARIES amulet_core
         IMPORTED_IMPLIB "${amulet_game_LIBRARY}"
     )

@@ -1,6 +1,12 @@
 from unittest import TestCase
 
 
-class JavaGameTestCase(TestCase):
-    def test_temp(self) -> None:
-        pass
+class GameVersionTestCase(TestCase):
+    def test_game_version(self) -> None:
+        from amulet.game.abc import (
+            JSONInterface,
+            JSONCompatible,
+            JSONDict,
+            JSONList,
+            GameVersion,
+        )

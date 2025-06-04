@@ -2,6 +2,8 @@
 
 #include <amulet/game/abc/block.hpp>
 
+#include <amulet/game/dll.hpp>
+
 namespace Amulet {
 namespace game {
 
@@ -16,7 +18,7 @@ namespace game {
         using BlockData::BlockData;
         using BlockData::operator=;
 
-        Waterloggable is_waterloggable(const std::string& namespace_, const std::string& base_name);
+        AMULET_GAME_EXPORT Waterloggable is_waterloggable(const std::string& namespace_, const std::string& base_name);
     };
 
 } // namespace game

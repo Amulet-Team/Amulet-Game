@@ -4,6 +4,8 @@
 
 #include "block.hpp"
 
+#include <amulet/game/dll.hpp>
+
 namespace Amulet {
 namespace game {
 
@@ -12,7 +14,7 @@ namespace game {
         using GameVersion::GameVersion;
         using GameVersion::operator=;
 
-        std::shared_ptr<JavaBlockData> get_block_data();
+        AMULET_GAME_EXPORT std::shared_ptr<JavaBlockData> get_block_data();
     };
 
 } // namespace game
