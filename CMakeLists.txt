@@ -23,6 +23,7 @@ endif()
 
 # Add pybind11
 find_package(pybind11 CONFIG REQUIRED)
+find_package(amulet_core CONFIG REQUIRED)
 
 # Add Amulet libraries
 find_package(amulet_pybind11_extensions CONFIG REQUIRED)
@@ -38,6 +39,8 @@ list(REMOVE_ITEM HEADERS ${EXTENSION_HEADERS})
 
 # Add implementation
 add_library(amulet_game SHARED)
+target_link_libraries( amulet_game PRIVATE pybind11::module )
+target_link_libraries( amulet_game PRIVATE amulet_core )
 target_compile_definitions(amulet_game PRIVATE ExportAmuletGame)
 target_include_directories(amulet_game PUBLIC ${SOURCE_PATH})
 target_sources(amulet_game PRIVATE ${SOURCES} ${HEADERS})

@@ -6,9 +6,14 @@
 namespace py = pybind11;
 namespace pyext = Amulet::pybind11_extensions;
 
+void init_java(py::module);
+
 void init_module(py::module m)
 {
     pyext::init_compiler_config(m);
+    pyext::check_compatibility(py::module::import("amulet.core"), m);
+
+    init_java(m);
 }
 
 PYBIND11_MODULE(_amulet_game, m)
