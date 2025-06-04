@@ -116,4 +116,5 @@ venv*
 *.pdb
 *.ilk
 
-src/amulet/game/versions.pkl.gz
+/amulet_game-*
+/src/amulet/game/versions.pkl.gz
