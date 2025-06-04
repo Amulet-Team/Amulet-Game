@@ -4,8 +4,13 @@ import sys
 from pathlib import Path
 import platform
 import datetime
+import glob
+import json
+import gzip
+import pickle
 
 from setuptools import setup, Extension, Command
+from setuptools.command.build import build
 from setuptools.command.build_ext import build_ext
 
 from packaging.version import Version
@@ -88,6 +93,59 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
             raise RuntimeError("Error installing amulet_game")
 
 
+class MinifyJSON(Command):
+    def initialize_options(self):
+        self.build_lib = None
+
+    def finalize_options(self):
+        self.set_undefined_options("build_py", ("build_lib", "build_lib"))
+
+    def run(self):
+        # This is rather janky but it is a stop-gap until the whole library can be ported to C++
+        sys.path.append(self.build_lib)
+        from amulet.game.abc import GameVersion
+        from amulet.game.java import JavaGameVersion
+        from amulet.game.bedrock import BedrockGameVersion
+        from amulet.game.universal import UniversalVersion
+        json_path = os.path.join("submodules", "PyMCTranslate", "PyMCTranslate", "json")
+
+        universal_version = UniversalVersion.from_json(os.path.join(json_path, "versions", "universal"))
+        _versions: dict[str, list[GameVersion]] = {
+            "universal": [universal_version],
+        }
+        for init_path in glob.glob(
+            os.path.join(glob.escape(json_path), "versions", "*", "__init__.json")
+        ):
+            version_path = os.path.dirname(init_path)
+
+            with open(os.path.join(version_path, "__init__.json")) as f:
+                init = json.load(f)
+
+            platform = init["platform"]
+            if platform == "bedrock":
+                _versions.setdefault("bedrock", []).append(
+                    BedrockGameVersion.from_json(version_path, universal_version)
+                )
+            elif platform == "java":
+                _versions.setdefault("java", []).append(
+                    JavaGameVersion.from_json(version_path, universal_version)
+                )
+            elif platform == "universal":
+                pass
+            else:
+                raise RuntimeError
+        with open(
+            os.path.join(self.build_lib, "amulet", "game", "versions.pkl.gz"), "wb"
+        ) as pkl:
+            pkl.write(gzip.compress(pickle.dumps(_versions)))
+
+
+# register a new command class
+cmdclass["minify_json"] = MinifyJSON
+# register our command class as a subcommand of the build command class
+cmdclass.get("build", build).sub_commands.append(("minify_json", None))
+
+
 cmdclass["build_ext"] = CMakeBuild
 
 
@@ -99,11 +157,9 @@ def _get_version() -> str:
         try:
             with open("build/timestamp.txt", "r") as f:
                 timestamp = datetime.datetime.strptime(f.read(), date_format)
-            print("using cached timestamp")
         except Exception:
             timestamp = datetime.datetime(1, 1, 1)
         if datetime.timedelta(minutes=10) < datetime.datetime.now() - timestamp:
-            print("get timestamp")
             timestamp = datetime.datetime.now()
             os.makedirs("build", exist_ok=True)
             with open("build/timestamp.txt", "w") as f:
