@@ -107,9 +107,12 @@ class MinifyJSON(Command):
         from amulet.game.java import JavaGameVersion
         from amulet.game.bedrock import BedrockGameVersion
         from amulet.game.universal import UniversalVersion
+
         json_path = os.path.join("submodules", "PyMCTranslate", "PyMCTranslate", "json")
 
-        universal_version = UniversalVersion.from_json(os.path.join(json_path, "versions", "universal"))
+        universal_version = UniversalVersion.from_json(
+            os.path.join(json_path, "versions", "universal")
+        )
         _versions: dict[str, list[GameVersion]] = {
             "universal": [universal_version],
         }
