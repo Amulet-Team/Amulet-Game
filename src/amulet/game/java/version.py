@@ -38,7 +38,9 @@ class JavaGameVersion(GameVersion):
         self._max_semantic_version = max_semantic_version
 
     @classmethod
-    def from_json(cls, version_path: str, universal_version: UniversalVersion | None = None) -> Self:
+    def from_json(
+        cls, version_path: str, universal_version: UniversalVersion | None = None
+    ) -> Self:
         with open(os.path.join(version_path, "__init__.json")) as f:
             init = json.load(f)
         assert init["platform"] == "java"
