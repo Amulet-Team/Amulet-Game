@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Self
+from typing import Self, TYPE_CHECKING
 import os
 import json
 
@@ -15,6 +15,9 @@ from amulet.core.version import VersionNumber
 
 from .block import JavaBlockData, Waterloggable
 from .biome import JavaBiomeData
+
+if TYPE_CHECKING:
+    from amulet.game.universal import UniversalVersion
 
 
 class JavaGameVersion(GameVersion):
@@ -35,7 +38,9 @@ class JavaGameVersion(GameVersion):
         self._max_semantic_version = max_semantic_version
 
     @classmethod
-    def from_json(cls, version_path: str) -> Self:
+    def from_json(
+        cls, version_path: str, universal_version: UniversalVersion | None = None
+    ) -> Self:
         with open(os.path.join(version_path, "__init__.json")) as f:
             init = json.load(f)
         assert init["platform"] == "java"
@@ -45,7 +50,8 @@ class JavaGameVersion(GameVersion):
         max_semantic_version = VersionNumber(*init["version_max"])
 
         block_format = init["block_format"]
-        universal_version = get_game_version("universal", VersionNumber(1))
+        if universal_version is None:
+            universal_version = get_game_version("universal", VersionNumber(1))
 
         self = cls(
             min_data_version,

@@ -31,6 +31,8 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v4
+      with:
+        submodules: 'true'
 
     - name: Install dependencies
       uses: ./.github/actions/install-dependencies
@@ -71,6 +73,8 @@ jobs:
     steps:
       - name: Clone
         uses: actions/checkout@v4
+        with:
+          submodules: 'true'
 
       - name: Build and run unittests
         uses: ./.github/actions/unittests-src
@@ -95,6 +99,8 @@ jobs:
     steps:
       - name: Clone
         uses: actions/checkout@v4
+        with:
+          submodules: 'true'
 
       - name: Build and run unittests
         uses: ./.github/actions/unittests-src

@@ -1,85 +1,36 @@
 from __future__ import annotations
 
-import traceback
 from functools import cache
 from typing import overload, Literal, TYPE_CHECKING
 from collections.abc import Sequence
 from threading import RLock
 import pickle
 import os
-import glob
-import json
 import gzip
+import logging
 
 from amulet.core.version import VersionNumber
 
 
 if TYPE_CHECKING:
     from .abc import GameVersion
-    from .universal import UniversalVersion
     from .java import JavaGameVersion
     from .bedrock import BedrockGameVersion
 
-
+_log = logging.getLogger(__name__)
 _versions: dict[str, list[GameVersion]] | None = None
 _lock = RLock()
-
-
-def _compile_raw_versions() -> None:
-    global _versions
-    with _lock:
-        json_path = os.environ.get("AMULET_GAME_VERSION_JSON_PATH")
-        if json_path is None:
-            raise RuntimeError("Could not find game version data.")
-        from .java import JavaGameVersion
-        from .bedrock import BedrockGameVersion
-        from .universal import UniversalVersion
-
-        _versions = {}
-        _versions.setdefault("universal", []).append(
-            UniversalVersion.from_json(os.path.join(json_path, "versions", "universal"))
-        )
-        for init_path in glob.glob(
-            os.path.join(glob.escape(json_path), "versions", "*", "__init__.json")
-        ):
-            version_path = os.path.dirname(init_path)
-
-            with open(os.path.join(version_path, "__init__.json")) as f:
-                init = json.load(f)
-
-            platform = init["platform"]
-            if platform == "bedrock":
-                _versions.setdefault("bedrock", []).append(
-                    BedrockGameVersion.from_json(version_path)
-                )
-            elif platform == "java":
-                _versions.setdefault("java", []).append(
-                    JavaGameVersion.from_json(version_path)
-                )
-            elif platform == "universal":
-                pass
-            else:
-                raise RuntimeError
-        with open(
-            os.path.join(os.path.dirname(__file__), "versions.pkl.gz"), "wb"
-        ) as pkl:
-            pkl.write(gzip.compress(pickle.dumps(_versions)))
 
 
 def _get_versions() -> dict[str, list[GameVersion]]:
     global _versions
     with _lock:
         if _versions is None:
+            _log.debug("Loading Minecraft translations")
             pkl_path = os.path.join(os.path.dirname(__file__), "versions.pkl.gz")
-            if os.path.isfile(pkl_path):
-                try:
-                    with open(pkl_path, "rb") as pkl:
-                        _versions = pickle.loads(gzip.decompress(pkl.read()))
-                except:
-                    traceback.print_exc()
-
-            if _versions is None:
-                _compile_raw_versions()
+            with open(pkl_path, "rb") as pkl:
+                _versions = pickle.loads(gzip.decompress(pkl.read()))
+            _log.debug("Finished loading Minecraft translations")
 
     assert _versions is not None
     return _versions
