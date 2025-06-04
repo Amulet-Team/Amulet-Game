@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Self
+from typing import Self, TYPE_CHECKING
 import json
 import os
 
@@ -15,6 +15,9 @@ from amulet.core.version import VersionNumber
 
 from ._block import BedrockBlockData
 from ._biome import BedrockBiomeData
+
+if TYPE_CHECKING:
+    from amulet.game.universal import UniversalVersion
 
 
 class BedrockGameVersion(GameVersion):
@@ -41,7 +44,7 @@ class BedrockGameVersion(GameVersion):
         )
 
     @classmethod
-    def from_json(cls, version_path: str) -> Self:
+    def from_json(cls, version_path: str, universal_version: UniversalVersion | None = None) -> Self:
         with open(os.path.join(version_path, "__init__.json")) as f:
             init = json.load(f)
         assert init["platform"] == "bedrock"
@@ -55,7 +58,8 @@ class BedrockGameVersion(GameVersion):
             "pseudo-numerical": "numerical",
             "nbt-blockstate": "blockstate",
         }[init["block_format"]]
-        universal_version = get_game_version("universal", VersionNumber(1))
+        if universal_version is None:
+            universal_version = get_game_version("universal", VersionNumber(1))
 
         self = cls(
             min_data_version,
