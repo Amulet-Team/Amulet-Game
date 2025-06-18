@@ -182,38 +182,41 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
         nbt_path_or_none = state.nbt_path
         if nbt_path_or_none is None:
             raise RuntimeError("The caller must set the nbt_path attribute")
-        else:
-            nbt_path = nbt_path_or_none
+        nbt_path = nbt_path_or_none
 
         tag_or_none = follow_nbt_path(nbt, nbt_path)
+        if tag_or_none is None:
+            raise RuntimeError("The caller must verify that the tag exists")
+        tag = tag_or_none
 
         nbt_cls = self._nbt_cls
-        if tag_or_none is None:
-            pass
-        elif isinstance(tag_or_none, nbt_cls):
-            tag = tag_or_none
-
-            def run(
-                keys: Iterable[KeyT],
-                lut: Mapping[KeyT, WalkInputNBTOptions] | None,
-                nested_dtype: NBTTagClsT | None,
-            ) -> None:
-                for key in keys:
-                    if lut is not None and key in lut:
-                        lut[key].run(src, StateData(), dst)
+        if isinstance(tag, nbt_cls):
+            new_type: NBTTagClsT
+            new_path: NBTPath
+            if isinstance(tag, CompoundTag):
+                for key, value in tag.items():
+                    if isinstance(key, bytes):
+                        continue
+                    if self._keys is not None and key in self._keys:
+                        outer_name, outer_type, path = nbt_path
+                        new_type = type(value)
+                        new_path = path + ((key, new_type),)
+                        self._keys[key].run(
+                            src,
+                            StateData(
+                                state.relative_location,
+                                (
+                                    outer_name,
+                                    outer_type,
+                                    new_path,
+                                ),
+                            ),
+                            dst
+                        )
                     elif self._nested_default is not None:
                         outer_name, outer_type, path = nbt_path
-                        new_type: NBTTagClsT
-                        if nested_dtype is None:
-                            new_type = tag.__class__
-                        else:
-                            new_type = nested_dtype
-                        new_path: NBTPath = path + (
-                            (
-                                key,
-                                new_type,
-                            ),
-                        )
+                        new_type = type(value)
+                        new_path = path + ((key, new_type),)
                         self._nested_default.run(
                             src,
                             StateData(
@@ -226,28 +229,82 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
                             ),
                             dst,
                         )
-
-            if isinstance(tag, CompoundTag):
-                run(
-                    [key for key in tag.keys() if isinstance(key, str)],
-                    self._keys,
-                    None,
-                )
             elif isinstance(tag, ListTag):
-                dtype = NBTLookUp[tag.element_tag_id]
-                assert dtype is not None
-                run(range(len(tag)), self._index, dtype)
+                for i, value in enumerate(tag):
+                    if self._index is not None and i in self._index:
+                        outer_name, outer_type, path = nbt_path
+                        new_type = type(value)
+                        new_path = path + ((i, new_type),)
+                        self._index[i].run(
+                            src,
+                            StateData(
+                                state.relative_location,
+                                (
+                                    outer_name,
+                                    outer_type,
+                                    new_path,
+                                ),
+                            ),
+                            dst
+                        )
+                    elif self._nested_default is not None:
+                        outer_name, outer_type, path = nbt_path
+                        new_type = type(value)
+                        new_path = path + ((i, new_type),)
+                        self._nested_default.run(
+                            src,
+                            StateData(
+                                state.relative_location,
+                                (
+                                    outer_name,
+                                    outer_type,
+                                    new_path,
+                                ),
+                            ),
+                            dst,
+                        )
             elif isinstance(tag, AbstractBaseArrayTag):
-                nested_dtype_: NBTTagClsT
+                nested_dtype: NBTTagClsT
                 if isinstance(tag, ByteArrayTag):
-                    nested_dtype_ = ByteTag
+                    nested_dtype = ByteTag
                 elif isinstance(tag, IntArrayTag):
-                    nested_dtype_ = IntTag
+                    nested_dtype = IntTag
                 elif isinstance(tag, LongArrayTag):
-                    nested_dtype_ = LongTag
+                    nested_dtype = LongTag
                 else:
                     raise TypeError
-                run(range(len(tag)), self._index, nested_dtype_)
+
+                for i, value in enumerate(tag):
+                    if self._index is not None and i in self._index:
+                        outer_name, outer_type, path = nbt_path
+                        new_path = path + ((i, nested_dtype),)
+                        self._index[i].run(
+                            src,
+                            StateData(
+                                state.relative_location,
+                                (
+                                    outer_name,
+                                    outer_type,
+                                    new_path,
+                                ),
+                            ),
+                            dst
+                        )
+                    elif self._nested_default is not None:
+                        outer_name, outer_type, path = nbt_path
+                        new_path = path + ((i, nested_dtype),)
+                        self._nested_default.run(
+                            src,
+                            StateData(
+                                state.relative_location,
+                                (
+                                    outer_name,
+                                    outer_type,
+                                    new_path,
+                                ),
+                            ),
+                            dst,
+                        )
             else:
                 return
 
