@@ -181,7 +181,7 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
             raise RuntimeError
         nbt_path_or_none = state.nbt_path
         if nbt_path_or_none is None:
-            raise RuntimeError
+            raise RuntimeError("The caller must set the nbt_path attribute")
         else:
             nbt_path = nbt_path_or_none
 
