@@ -14,6 +14,7 @@ from amulet.core.version import VersionNumber
 
 if TYPE_CHECKING:
     from .abc import GameVersion
+    from .universal import UniversalVersion
     from .java import JavaGameVersion
     from .bedrock import BedrockGameVersion
 
@@ -68,6 +69,10 @@ def game_versions(platform: str) -> Sequence[GameVersion]:
         raise KeyError(f'The requested platform "{platform}" is not present')
     return tuple(_get_versions()[platform])
 
+@overload
+def get_game_version(
+    platform: Literal["universal"], version_number: VersionNumber
+) -> UniversalVersion: ...
 
 @overload
 def get_game_version(
