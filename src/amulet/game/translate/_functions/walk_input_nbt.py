@@ -318,7 +318,10 @@ class WalkInputNBT(AbstractBaseTranslationFunction):
             return
 
         if self._path is None:
-            new_state = state
+            if state.nbt_path is None:
+                new_state = StateData(state.relative_location, ("", CompoundTag, ()))
+            else:
+                new_state = state
         else:
             path = ("", CompoundTag, self._path)
             # verify that the data exists at the path
