@@ -69,10 +69,12 @@ def game_versions(platform: str) -> Sequence[GameVersion]:
         raise KeyError(f'The requested platform "{platform}" is not present')
     return tuple(_get_versions()[platform])
 
+
 @overload
 def get_game_version(
     platform: Literal["universal"], version_number: VersionNumber
 ) -> UniversalVersion: ...
+
 
 @overload
 def get_game_version(
