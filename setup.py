@@ -31,8 +31,6 @@ def fix_path(path: str) -> str:
     return os.path.realpath(path).replace(os.sep, "/")
 
 
-dependencies = requirements.get_runtime_dependencies()
-
 cmdclass: dict[str, type[Command]] = versioneer.get_cmdclass()
 
 
@@ -65,12 +63,14 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
             if platform.machine() == "arm64":
                 platform_args.append("-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64")
 
+        if subprocess.run(["cmake", "--version"]).returncode:
+            raise RuntimeError("Could not find cmake")
         if subprocess.run(
             [
                 "cmake",
                 *platform_args,
                 f"-DPYTHON_EXECUTABLE={sys.executable}",
-                f"-Dpybind11_DIR={pybind11.get_cmake_dir().replace(os.sep, '/')}",
+                f"-Dpybind11_DIR={fix_path(pybind11.get_cmake_dir())}",
                 f"-Damulet_pybind11_extensions_DIR={fix_path(amulet.pybind11_extensions.__path__[0])}",
                 f"-Damulet_io_DIR={fix_path(amulet.io.__path__[0])}",
                 f"-Damulet_nbt_DIR={fix_path(amulet.nbt.__path__[0])}",
@@ -82,15 +82,15 @@ class CMakeBuild(cmdclass.get("build_ext", build_ext)):
                 "build",
             ]
         ).returncode:
-            raise RuntimeError("Error configuring amulet_game")
+            raise RuntimeError("Error configuring amulet-game")
         if subprocess.run(
             ["cmake", "--build", "build", "--config", "Release"]
         ).returncode:
-            raise RuntimeError("Error installing amulet_game")
+            raise RuntimeError("Error installing amulet-game")
         if subprocess.run(
             ["cmake", "--install", "build", "--config", "Release"]
         ).returncode:
-            raise RuntimeError("Error installing amulet_game")
+            raise RuntimeError("Error installing amulet-game")
 
 
 class MinifyJSON(Command):
@@ -189,6 +189,7 @@ def _get_version() -> str:
 setup(
     version=_get_version(),
     cmdclass=cmdclass,
-    ext_modules=[Extension("amulet.game._amulet_game", [])],
-    install_requires=dependencies,
+    ext_modules=[Extension("amulet.game._amulet_game", [])]
+    * (not os.environ.get("AMULET_SKIP_COMPILE", None)),
+    install_requires=requirements.get_runtime_dependencies(),
 )

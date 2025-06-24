@@ -47,7 +47,7 @@ jobs:
       run: |
         python -m build --wheel .
 
-    - name: Publish Amulet-Game
+    - name: Publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.AMULET_GAME_PYPI_PASSWORD }}

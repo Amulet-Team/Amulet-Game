@@ -2,14 +2,14 @@
 A module to store data about the game including state enumerations and translations between different game versions.
 """
 
-import logging
+import logging as _logging
 
 from . import _version
 
 __version__ = _version.get_versions()["version"]
 
 # init a default logger
-logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
+_logging.basicConfig(level=_logging.INFO, format="%(levelname)s - %(message)s")
 
 
 def _init() -> None:
@@ -27,6 +27,7 @@ def _init() -> None:
         raise RuntimeError(f"Unsupported platform {sys.platform}")
 
     # Import dependencies
+    import amulet.nbt
     import amulet.core
 
     # Load the shared library
