@@ -211,7 +211,7 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
                                     new_path,
                                 ),
                             ),
-                            dst
+                            dst,
                         )
                     elif self._nested_default is not None:
                         outer_name, outer_type, path = nbt_path
@@ -245,7 +245,7 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
                                     new_path,
                                 ),
                             ),
-                            dst
+                            dst,
                         )
                     elif self._nested_default is not None:
                         outer_name, outer_type, path = nbt_path
@@ -288,7 +288,7 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
                                     new_path,
                                 ),
                             ),
-                            dst
+                            dst,
                         )
                     elif self._nested_default is not None:
                         outer_name, outer_type, path = nbt_path
