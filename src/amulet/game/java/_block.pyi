@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing
 
-__all__ = ["Waterloggable"]
+__all__: list[str] = ["Waterloggable"]
 
 class Waterloggable:
     """

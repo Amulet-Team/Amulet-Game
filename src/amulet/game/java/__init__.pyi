@@ -5,4 +5,4 @@ from amulet.game.java.version import JavaGameVersion
 
 from . import _block, biome, block, version
 
-__all__ = ["JavaGameVersion", "Waterloggable", "biome", "block", "version"]
+__all__: list[str] = ["JavaGameVersion", "Waterloggable", "biome", "block", "version"]
