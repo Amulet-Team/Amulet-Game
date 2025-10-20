@@ -5,7 +5,7 @@ A module to store data about the game including state enumerations and translati
 from __future__ import annotations
 
 from amulet.game.bedrock._version import BedrockGameVersion
-from amulet.game.game import game_platforms, game_versions, get_game_version
+from amulet.game.game import get_game_platforms, get_game_version, get_game_versions
 from amulet.game.java.version import JavaGameVersion
 
 from . import _amulet_game, _version, abc, bedrock, game, java, translate
@@ -17,9 +17,9 @@ __all__: list[str] = [
     "bedrock",
     "compiler_config",
     "game",
-    "game_platforms",
-    "game_versions",
+    "get_game_platforms",
     "get_game_version",
+    "get_game_versions",
     "java",
     "translate",
 ]

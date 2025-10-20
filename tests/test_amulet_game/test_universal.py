@@ -9,10 +9,10 @@ class UniversalGameVersionTestCase(TestCase):
         self.assertTrue(issubclass(UniversalVersion, GameVersion))
 
     def test_get_versions(self) -> None:
-        from amulet.game import game_platforms, game_versions
+        from amulet.game import get_game_platforms, get_game_versions
         from amulet.game.universal import UniversalVersion
 
-        self.assertIn("universal", game_platforms())
-        self.assertEqual(1, len(game_versions("universal")))
-        for v in game_versions("universal"):
+        self.assertIn("universal", get_game_platforms())
+        self.assertEqual(1, len(get_game_versions("universal")))
+        for v in get_game_versions("universal"):
             self.assertIsInstance(v, UniversalVersion)
