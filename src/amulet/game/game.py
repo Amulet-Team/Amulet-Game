@@ -37,7 +37,7 @@ def _get_versions() -> dict[str, list[GameVersion]]:
     return _versions
 
 
-def game_platforms() -> list[str]:
+def get_game_platforms() -> list[str]:
     """
     Get a list of all the platforms there are Version classes for.
     These are currently 'java' and 'bedrock'
@@ -46,18 +46,18 @@ def game_platforms() -> list[str]:
 
 
 @overload
-def game_versions(platform: Literal["java"]) -> Sequence[JavaGameVersion]: ...
+def get_game_versions(platform: Literal["java"]) -> Sequence[JavaGameVersion]: ...
 
 
 @overload
-def game_versions(platform: Literal["bedrock"]) -> Sequence[BedrockGameVersion]: ...
+def get_game_versions(platform: Literal["bedrock"]) -> Sequence[BedrockGameVersion]: ...
 
 
 @overload
-def game_versions(platform: str) -> Sequence[GameVersion]: ...
+def get_game_versions(platform: str) -> Sequence[GameVersion]: ...
 
 
-def game_versions(platform: str) -> Sequence[GameVersion]:
+def get_game_versions(platform: str) -> Sequence[GameVersion]:
     """
     Get all known version classes for the platform.
 
