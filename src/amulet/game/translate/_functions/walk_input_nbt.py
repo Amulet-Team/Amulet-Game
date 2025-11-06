@@ -274,7 +274,7 @@ class WalkInputNBTOptions(AbstractBaseTranslationFunction):
                 else:
                     raise TypeError
 
-                for i, value in enumerate(tag):
+                for i, arr_value in enumerate(tag):
                     if self._index is not None and i in self._index:
                         outer_name, outer_type, path = nbt_path
                         new_path = path + ((i, nested_dtype),)
