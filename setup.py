@@ -94,18 +94,19 @@ class CMakeBuild(BuildExt):
 
 
 class MinifyJSON(Command):
-    def initialize_options(self):
+    def initialize_options(self) -> None:
         self.editable_mode = False
-        self.build_lib = None
+        self.build_lib: str | None = None
 
-    def finalize_options(self):
+    def finalize_options(self) -> None:
         self.set_undefined_options("build_py", ("build_lib", "build_lib"))
 
-    def run(self):
+    def run(self) -> None:
         # This is rather janky but it is a stop-gap until the whole library can be ported to C++
         if self.editable_mode:
             src_dir = os.path.abspath("src")
         else:
+            assert self.build_lib is not None
             src_dir = self.build_lib
 
         sys.path.append(src_dir)
