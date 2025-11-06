@@ -8,6 +8,7 @@ import json
 import gzip
 import pickle
 from tempfile import TemporaryDirectory
+from typing import TypeAlias, TYPE_CHECKING
 
 from setuptools import setup, Extension, Command
 from setuptools.command.build import build
@@ -18,15 +19,20 @@ import versioneer
 import requirements
 
 
-def fix_path(path: str) -> str:
+def fix_path(path: str | os.PathLike[str]) -> str:
     return os.path.realpath(path).replace(os.sep, "/")
 
 
 cmdclass: dict[str, type[Command]] = versioneer.get_cmdclass()
 
+if TYPE_CHECKING:
+    BuildExt: TypeAlias = build_ext
+else:
+    BuildExt = cmdclass.get("build_ext", build_ext)
 
-class CMakeBuild(cmdclass.get("build_ext", build_ext)):
-    def build_extension(self, ext):
+
+class CMakeBuild(BuildExt):
+    def build_extension(self, ext: Extension) -> None:
         import pybind11
         import amulet.pybind11_extensions
         import amulet.io
@@ -150,7 +156,7 @@ cmdclass["minify_json"] = MinifyJSON
 cmdclass.get("build", build).sub_commands.append(("minify_json", None))
 
 
-cmdclass["build_ext"] = CMakeBuild
+cmdclass["build_ext"] = CMakeBuild  # type: ignore
 
 
 setup(
