@@ -30,6 +30,7 @@ def _get_versions() -> dict[str, list[GameVersion]]:
         if _versions is None:
             _log.debug("Loading Minecraft translations")
             from .abc import GameVersion
+
             pkl_path = os.path.join(os.path.dirname(__file__), "versions.pkl.gz")
             with open(pkl_path, "rb") as pkl:
                 versions: object = pickle.loads(gzip.decompress(pkl.read()))
