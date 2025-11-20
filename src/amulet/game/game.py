@@ -10,6 +10,7 @@ import gzip
 import logging
 
 from amulet.core.version import VersionNumber
+from amulet.utils.cast import dynamic_cast
 
 
 if TYPE_CHECKING:
@@ -28,9 +29,25 @@ def _get_versions() -> dict[str, list[GameVersion]]:
     with _lock:
         if _versions is None:
             _log.debug("Loading Minecraft translations")
+            from .abc import GameVersion
+
             pkl_path = os.path.join(os.path.dirname(__file__), "versions.pkl.gz")
             with open(pkl_path, "rb") as pkl:
-                _versions = pickle.loads(gzip.decompress(pkl.read()))
+                versions: object = pickle.loads(gzip.decompress(pkl.read()))
+
+            def version_sort(v: GameVersion) -> VersionNumber:
+                return v.min_version
+
+            sorted_versions: dict[str, list[GameVersion]] = {}
+            for platform, version_list in dynamic_cast(versions, dict).items():
+                if isinstance(platform, str) and isinstance(version_list, list):
+                    sorted_versions[platform] = sorted(
+                        [v for v in version_list if isinstance(v, GameVersion)],
+                        key=version_sort,
+                        reverse=True,
+                    )
+            _versions = sorted_versions
+
             _log.debug("Finished loading Minecraft translations")
 
     assert _versions is not None
