@@ -137,7 +137,7 @@ class DatabaseBiomeData(BiomeData):
             return self._to_universal[(biome.namespace, biome.base_name)]
         except KeyError:
             raise BiomeTranslationError(
-                f"Biome {biome} does not exist in version {self._game_version.platform} {self._game_version.min_version}"
+                f"Biome {biome} does not exist in version {self._game_version.platform} {self._game_version.min_semantic_version}"
             )
 
     def from_universal(
@@ -153,7 +153,7 @@ class DatabaseBiomeData(BiomeData):
             namespace, base_name = self._from_universal[biome]
         except KeyError:
             raise BiomeTranslationError(
-                f"Biome {biome} does not exist in version {self._game_version.platform} {self._game_version.min_version}"
+                f"Biome {biome} does not exist in version {self._game_version.platform} {self._game_version.min_semantic_version}"
             )
         else:
             return Biome(target_platform, target_version, namespace, base_name)

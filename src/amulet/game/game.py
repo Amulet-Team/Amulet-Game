@@ -36,7 +36,7 @@ def _get_versions() -> dict[str, list[GameVersion]]:
                 versions: object = pickle.loads(gzip.decompress(pkl.read()))
 
             def version_sort(v: GameVersion) -> VersionNumber:
-                return v.min_version
+                return v.min_semantic_version
 
             sorted_versions: dict[str, list[GameVersion]] = {}
             for platform, version_list in dynamic_cast(versions, dict).items():

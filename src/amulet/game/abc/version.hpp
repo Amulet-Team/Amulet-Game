@@ -16,12 +16,12 @@ namespace py = pybind11;
 namespace Amulet {
 namespace game {
 
-    class GameVersionImpl;
-
     class GameVersion : public PyObjWrapper {
     public:
         using PyObjWrapper::PyObjWrapper;
         using PyObjWrapper::operator=;
+
+        AMULET_GAME_EXPORT VersionNumber get_max_known_block_version();
 
         AMULET_GAME_EXPORT std::shared_ptr<BiomeData> get_biome_data();
         AMULET_GAME_EXPORT std::shared_ptr<BlockData> get_block_data();

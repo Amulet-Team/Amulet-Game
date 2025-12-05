@@ -17,5 +17,11 @@ namespace game {
         return std::make_shared<BlockData>(_obj.attr("block"));
     }
 
+    VersionNumber GameVersion::get_max_known_block_version()
+    {
+        py::gil_scoped_acquire gil;
+        return _obj.attr("max_known_block_version").cast<VersionNumber>();
+    }
+
 } // namespace game
 } // namespace Amulet

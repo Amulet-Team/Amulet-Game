@@ -27,14 +27,18 @@ class JavaGameVersion(GameVersion):
     def __init__(
         self,
         min_data_version: VersionNumber,
+        max_known_data_version: VersionNumber,
         max_data_version: VersionNumber,
         min_semantic_version: VersionNumber,
+        max_known_semantic_version: VersionNumber,
         max_semantic_version: VersionNumber,
     ):
         """Do not use this."""
         self._min_data_version = min_data_version
+        self._max_known_data_version = max_known_data_version
         self._max_data_version = max_data_version
         self._min_semantic_version = min_semantic_version
+        self._max_known_semantic_version = max_known_semantic_version
         self._max_semantic_version = max_semantic_version
 
     @classmethod
@@ -45,8 +49,10 @@ class JavaGameVersion(GameVersion):
             init = json.load(f)
         assert init["platform"] == "java"
         min_data_version = VersionNumber(init["data_version"])
+        max_known_data_version = VersionNumber(init["data_version_max_known"])
         max_data_version = VersionNumber(init["data_version_max"])
         min_semantic_version = VersionNumber(*init["version"])
+        max_known_semantic_version = VersionNumber(*init["version_max_known"])
         max_semantic_version = VersionNumber(*init["version_max"])
 
         block_format = init["block_format"]
@@ -55,8 +61,10 @@ class JavaGameVersion(GameVersion):
 
         self = cls(
             min_data_version,
+            max_known_data_version,
             max_data_version,
             min_semantic_version,
+            max_known_semantic_version,
             max_semantic_version,
         )
 
@@ -153,7 +161,7 @@ class JavaGameVersion(GameVersion):
         return self
 
     def __repr__(self) -> str:
-        return f"JavaGameVersion({self.min_version!r})"
+        return f"JavaGameVersion({self.min_semantic_version!r})"
 
     def supports_version(self, platform: str, version: VersionNumber) -> bool:
         return platform == "java" and (
@@ -166,11 +174,39 @@ class JavaGameVersion(GameVersion):
         return "java"
 
     @property
-    def min_version(self) -> VersionNumber:
+    def min_semantic_version(self) -> VersionNumber:
+        return self._min_semantic_version
+
+    @property
+    def max_known_semantic_version(self) -> VersionNumber:
+        return self._max_known_semantic_version
+
+    @property
+    def max_semantic_version(self) -> VersionNumber:
+        return self._max_semantic_version
+
+    @property
+    def min_data_version(self) -> VersionNumber:
         return self._min_data_version
 
     @property
-    def max_version(self) -> VersionNumber:
+    def max_known_data_version(self) -> VersionNumber:
+        return self._max_known_data_version
+
+    @property
+    def max_data_version(self) -> VersionNumber:
+        return self._max_data_version
+
+    @property
+    def min_block_version(self) -> VersionNumber:
+        return self._min_data_version
+
+    @property
+    def max_known_block_version(self) -> VersionNumber:
+        return self._max_known_data_version
+
+    @property
+    def max_block_version(self) -> VersionNumber:
         return self._max_data_version
 
     @property
