@@ -17,7 +17,9 @@ def main() -> None:
     from amulet.game.bedrock import BedrockGameVersion
     from amulet.game.universal import UniversalVersion
 
-    json_path = os.path.join(root_path, "submodules", "PyMCTranslate", "PyMCTranslate", "json")
+    json_path = os.path.join(
+        root_path, "submodules", "PyMCTranslate", "PyMCTranslate", "json"
+    )
 
     universal_version = UniversalVersion.from_json(
         os.path.join(json_path, "versions", "universal")
@@ -46,11 +48,9 @@ def main() -> None:
             pass
         else:
             raise RuntimeError
-    with open(
-        os.path.join(src_dir, "amulet", "game", "versions.pkl.gz"), "wb"
-    ) as pkl:
+    with open(os.path.join(src_dir, "amulet", "game", "versions.pkl.gz"), "wb") as pkl:
         pkl.write(gzip.compress(pickle.dumps(_versions)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
