@@ -43,8 +43,8 @@ class BedrockGameVersion(GameVersion):
 
     def supports_version(self, platform: str, version: VersionNumber) -> bool:
         return platform == "bedrock" and (
-                self._min_block_version <= version <= self._max_block_version
-                or self._min_semantic_version <= version <= self._max_semantic_version
+            self._min_block_version <= version <= self._max_block_version
+            or self._min_semantic_version <= version <= self._max_semantic_version
         )
 
     @classmethod
