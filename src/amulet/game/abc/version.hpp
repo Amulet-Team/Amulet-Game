@@ -16,8 +16,6 @@ namespace py = pybind11;
 namespace Amulet {
 namespace game {
 
-    class GameVersionImpl;
-
     class GameVersion : public PyObjWrapper {
     public:
         using PyObjWrapper::PyObjWrapper;
