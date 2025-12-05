@@ -52,11 +52,27 @@ class UniversalVersion(GameVersion):
         return "universal"
 
     @property
-    def min_version(self) -> VersionNumber:
+    def min_semantic_version(self) -> VersionNumber:
         return VersionNumber(1)
 
     @property
-    def max_version(self) -> VersionNumber:
+    def max_known_semantic_version(self) -> VersionNumber:
+        return VersionNumber(1)
+
+    @property
+    def max_semantic_version(self) -> VersionNumber:
+        return VersionNumber(1)
+
+    @property
+    def min_block_version(self) -> VersionNumber:
+        return VersionNumber(1)
+
+    @property
+    def max_known_block_version(self) -> VersionNumber:
+        return VersionNumber(1)
+
+    @property
+    def max_block_version(self) -> VersionNumber:
         return VersionNumber(1)
 
     @property

@@ -244,7 +244,7 @@ class DatabaseBlockData(BlockData, ABC):
             translator = self._to_universal[(block.namespace, block.base_name)]
         except KeyError:
             raise BlockTranslationError(
-                f"Block {block} does not exist in version {self._game_version.platform} {self._game_version.min_version}"
+                f"Block {block} does not exist in version {self._game_version.platform} {self._game_version.min_semantic_version}"
             )
 
         output, extra_output, extra_needed, cacheable = translator.run(
@@ -294,7 +294,7 @@ class DatabaseBlockData(BlockData, ABC):
             translator = self._from_universal[(block.namespace, block.base_name)]
         except KeyError:
             raise BlockTranslationError(
-                f"Block {block} does not exist in version {self._game_version.platform} {self._game_version.min_version}"
+                f"Block {block} does not exist in version {self._game_version.platform} {self._game_version.min_semantic_version}"
             )
 
         output, extra_output, extra_needed, cacheable = translator.run(

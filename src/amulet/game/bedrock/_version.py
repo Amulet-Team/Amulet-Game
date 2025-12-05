@@ -26,21 +26,25 @@ class BedrockGameVersion(GameVersion):
 
     def __init__(
         self,
-        min_data_version: VersionNumber,
-        max_data_version: VersionNumber,
+        min_block_version: VersionNumber,
+        max_known_block_version: VersionNumber,
+        max_block_version: VersionNumber,
         min_semantic_version: VersionNumber,
+        max_known_semantic_version: VersionNumber,
         max_semantic_version: VersionNumber,
     ) -> None:
         """Do not use this."""
-        self._min_data_version = min_data_version
-        self._max_data_version = max_data_version
+        self._min_block_version = min_block_version
+        self._max_known_block_version = max_known_block_version
+        self._max_block_version = max_block_version
         self._min_semantic_version = min_semantic_version
+        self._max_known_semantic_version = max_known_semantic_version
         self._max_semantic_version = max_semantic_version
 
     def supports_version(self, platform: str, version: VersionNumber) -> bool:
         return platform == "bedrock" and (
-            self._min_data_version <= version <= self._max_data_version
-            or self._min_semantic_version <= version <= self._max_semantic_version
+                self._min_block_version <= version <= self._max_block_version
+                or self._min_semantic_version <= version <= self._max_semantic_version
         )
 
     @classmethod
@@ -50,9 +54,11 @@ class BedrockGameVersion(GameVersion):
         with open(os.path.join(version_path, "__init__.json")) as f:
             init = json.load(f)
         assert init["platform"] == "bedrock"
-        min_data_version = VersionNumber(init.get("data_version", -1))
-        max_data_version = VersionNumber(init.get("data_version_max", -1))
+        min_block_version = VersionNumber(init.get("data_version", -1))
+        max_known_block_version = VersionNumber(init.get("data_version_max_known", -1))
+        max_block_version = VersionNumber(init.get("data_version_max", -1))
         min_semantic_version = VersionNumber(*init["version"])
+        max_known_sematic_version = VersionNumber(*init["version_max_known"])
         max_semantic_version = VersionNumber(*init["version_max"])
 
         block_format = {
@@ -64,9 +70,11 @@ class BedrockGameVersion(GameVersion):
             universal_version = get_game_version("universal", VersionNumber(1))
 
         self = cls(
-            min_data_version,
-            max_data_version,
+            min_block_version,
+            max_known_block_version,
+            max_block_version,
             min_semantic_version,
+            max_known_sematic_version,
             max_semantic_version,
         )
 
@@ -148,19 +156,35 @@ class BedrockGameVersion(GameVersion):
         return self
 
     def __repr__(self) -> str:
-        return f"BedrockGameVersion({self.min_version!r})"
+        return f"BedrockGameVersion({self.min_semantic_version!r})"
 
     @property
     def platform(self) -> str:
         return "bedrock"
 
     @property
-    def min_version(self) -> VersionNumber:
+    def min_semantic_version(self) -> VersionNumber:
         return self._min_semantic_version
 
     @property
-    def max_version(self) -> VersionNumber:
+    def max_known_semantic_version(self) -> VersionNumber:
+        return self._max_known_semantic_version
+
+    @property
+    def max_semantic_version(self) -> VersionNumber:
         return self._max_semantic_version
+
+    @property
+    def min_block_version(self) -> VersionNumber:
+        return self._min_block_version
+
+    @property
+    def max_known_block_version(self) -> VersionNumber:
+        return self._max_known_block_version
+
+    @property
+    def max_block_version(self) -> VersionNumber:
+        return self._max_block_version
 
     @property
     def block(self) -> BedrockBlockData:
