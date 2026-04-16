@@ -12,7 +12,6 @@ import logging
 from amulet.core.version import VersionNumber
 from amulet.utils.cast import dynamic_cast
 
-
 if TYPE_CHECKING:
     from .abc import GameVersion
     from .universal import UniversalVersion

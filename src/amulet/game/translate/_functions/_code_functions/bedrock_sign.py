@@ -6,7 +6,6 @@ from amulet.nbt import StringTag, CompoundTag, ListTag
 from ._text import RawTextComponent, ExtendedBedrockSectionParser
 from .._state import SrcData, StateData, DstData
 
-
 BedrockFrontText = str(uuid4())
 BedrockBackText = str(uuid4())
 
