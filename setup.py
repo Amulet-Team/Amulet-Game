@@ -102,6 +102,9 @@ class MinifyJSON(Command):
         self.set_undefined_options("build_py", ("build_lib", "build_lib"))
 
     def run(self) -> None:
+        if os.environ.get("AMULET_SKIP_COMPILE", None):
+            return
+
         # This is rather janky but it is a stop-gap until the whole library can be ported to C++
         if self.editable_mode:
             src_dir = os.path.abspath("src")
