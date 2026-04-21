@@ -1,8 +1,5 @@
-"""
-A module to store data about the game including state enumerations and translations between different game versions.
-"""
-
 import logging as _logging
+import os
 
 from . import _version
 
@@ -16,6 +13,9 @@ def _init() -> None:
     import os
     import sys
     import ctypes
+
+    if os.environ.get("AMULET_SKIP_COMPILE", None):
+        return
 
     if sys.platform == "win32":
         lib_path = os.path.join(os.path.dirname(__file__), "amulet_game.dll")
@@ -41,7 +41,10 @@ def _init() -> None:
 
 
 _init()
+del _init
 
-from .game import get_game_platforms, get_game_versions, get_game_version
-from .java import JavaGameVersion
-from .bedrock import BedrockGameVersion
+
+if not os.environ.get("AMULET_SKIP_COMPILE", None):
+    from .game import get_game_platforms, get_game_versions, get_game_version
+    from .java import JavaGameVersion
+    from .bedrock import BedrockGameVersion

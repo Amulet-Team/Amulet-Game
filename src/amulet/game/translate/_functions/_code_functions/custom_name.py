@@ -12,7 +12,6 @@ from ._text import (
     JavaSectionParser,
 )
 
-
 JavaSectionText = str(uuid4())
 JavaRawText = str(uuid4())
 BedrockSectionText = str(uuid4())

@@ -38,7 +38,6 @@ from ._code_functions.bedrock_skull_rotation import (
     to_universal as bedrock_skull_rotation_2u,
 )
 
-
 T = TypeVar("T")
 
 

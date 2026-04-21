@@ -12,7 +12,6 @@ from amulet.game.game import get_game_version
 
 from .game_version_container import GameVersionContainer
 
-
 if TYPE_CHECKING:
     from .version import GameVersion
 
