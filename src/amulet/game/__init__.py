@@ -22,6 +22,11 @@ def _init() -> None:
     import amulet.nbt
     import amulet.core
 
+    try:
+        os.add_dll_directory(__path__[0])
+    except AttributeError:
+        pass
+
     from ._amulet_game import init
 
     init(sys.modules[__name__])
