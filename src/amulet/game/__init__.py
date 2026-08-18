@@ -1,5 +1,4 @@
 import logging as _logging
-import os
 
 from . import _version
 
@@ -34,9 +33,3 @@ def _init() -> None:
 
 _init()
 del _init
-
-
-if not os.environ.get("AMULET_SKIP_COMPILE", None):
-    from .game import get_game_platforms, get_game_versions, get_game_version
-    from .java import JavaGameVersion
-    from .bedrock import BedrockGameVersion
