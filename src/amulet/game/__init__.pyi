@@ -23,8 +23,5 @@ __all__: list[str] = [
     "java",
     "translate",
 ]
-
-def _init() -> None: ...
-
 __version__: str
 compiler_config: dict

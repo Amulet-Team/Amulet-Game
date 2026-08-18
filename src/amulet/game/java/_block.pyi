@@ -15,22 +15,14 @@ class Waterloggable:
       Always : Is always waterlogged. (attribute is not stored)
     """
 
-    Always: typing.ClassVar[
-        Waterloggable
-    ]  # value = amulet.game.java._block.Waterloggable.Always
-    No: typing.ClassVar[
-        Waterloggable
-    ]  # value = amulet.game.java._block.Waterloggable.No
-    Yes: typing.ClassVar[
-        Waterloggable
-    ]  # value = amulet.game.java._block.Waterloggable.Yes
-    __members__: typing.ClassVar[
-        dict[str, Waterloggable]
-    ]  # value = {'No': amulet.game.java._block.Waterloggable.No, 'Yes': amulet.game.java._block.Waterloggable.Yes, 'Always': amulet.game.java._block.Waterloggable.Always}
+    Always: typing.ClassVar[Waterloggable]
+    No: typing.ClassVar[Waterloggable]
+    Yes: typing.ClassVar[Waterloggable]
+    __members__: typing.ClassVar[dict[str, Waterloggable]]
     def __eq__(self, other: typing.Any) -> bool: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
-    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __init__(self, value: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
