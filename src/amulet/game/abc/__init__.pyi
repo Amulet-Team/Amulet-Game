@@ -60,8 +60,6 @@ __all__: list[str] = [
     "load_json_block_spec",
     "version",
 ]
-JSONCompatible: typing.TypeAlias = typing.Union[
-    str, int, float, bool, None, JSONList, JSONDict
-]
+JSONCompatible: typing.TypeAlias = str | int | float | bool | None | JSONList | JSONDict
 JSONDict: typing.TypeAlias = dict[str, JSONCompatible]
 JSONList: typing.TypeAlias = list[JSONCompatible]
